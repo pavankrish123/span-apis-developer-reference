@@ -234,8 +234,18 @@
   }
 }</code></pre>
         <p class="small muted">For analytics, inspect <code class="inline">result.sections[n].isComplete</code> per section. The <code class="inline">sectionType</code> discriminator tells you which section-specific fields and data model to parse.</p>
-        <div class="endpoint"><span class="method get">GET</span><code class="path">/api/analytics/span/{jobId}</code><span class="method delete">DELETE</span><code class="path">/api/analytics/span/{jobId}</code></div>
-        <p>GET returns the current analytics envelope. DELETE aborts the analytics job. Analytics failures are represented in an analytics error envelope; check the response body as well as the HTTP status.</p>
+        <h3>Poll for results</h3>
+        <div class="endpoint"><span class="method get">GET</span><code class="path">/api/analytics/span/{jobId}</code></div>
+        <div class="code-label">cURL · poll</div>
+        <pre><code>curl --request GET "$APM_API_BASE/api/analytics/span/$JOB_ID" \
+  --header "$AUTH_HEADER"</code></pre>
+        <p>GET returns the current analytics envelope. Check <code class="inline">result.sections[n].isComplete</code>; each section can finish independently. If the request fails, inspect the response body for the analytics error envelope as well as the HTTP status.</p>
+        <h3>Cancel a job</h3>
+        <div class="endpoint"><span class="method delete">DELETE</span><code class="path">/api/analytics/span/{jobId}</code></div>
+        <div class="code-label">cURL · cancel</div>
+        <pre><code>curl --request DELETE "$APM_API_BASE/api/analytics/span/$JOB_ID" \
+  --header "$AUTH_HEADER"</code></pre>
+        <p>DELETE aborts the analytics job and returns its current result envelope. Check the body for errors if cancellation fails.</p>
         <h3>Shared request fields</h3>
         <div class="table-wrap"><table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody>
           <tr><td>sharedParameters.timeRangeMillis</td><td>Query range in epoch milliseconds. Use explicit bounds for predictable requests.</td></tr>
