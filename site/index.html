@@ -100,39 +100,61 @@
         <div class="code-label">cURL · poll</div>
         <pre><code>curl --request GET "$APM_API_BASE/api/v2/apm/span-metrics/$JOB_ID" \
   --header "$AUTH_HEADER"</code></pre>
-        <p>Read the result from <code class="inline">data</code>. Its fields include <code class="inline">isComplete</code>, <code class="inline">granularityMinutes</code>, <code class="inline">seriesKey</code>, and <code class="inline">dataPoints</code>. Each point contains <code class="inline">bucketMs</code>, <code class="inline">spanCount</code>, <code class="inline">errorCount</code>, <code class="inline">errorRatio</code>, <code class="inline">spansPerSecond</code>, and nullable <code class="inline">p50Ms</code>, <code class="inline">p90Ms</code>, <code class="inline">p95Ms</code>, and <code class="inline">p99Ms</code>.</p>
+        <p>Read the metrics result from <code class="inline">data</code>. The response has an outer job envelope and an inner time-series result.</p>
+        <h3>Response fields</h3>
+        <div class="table-wrap"><table><thead><tr><th>JSON path</th><th>Type</th><th>Meaning</th></tr></thead><tbody>
+          <tr><td>jobId</td><td>string</td><td>Job identifier. Also repeated inside <code>data.jobId</code>.</td></tr>
+          <tr><td>processed</td><td>integer</td><td>Completed query windows.</td></tr>
+          <tr><td>total</td><td>integer</td><td>Total query windows for the job.</td></tr>
+          <tr><td>data.isComplete</td><td>boolean</td><td>True when the requested range has finished processing.</td></tr>
+          <tr><td>data.granularityMinutes</td><td>integer</td><td>Resolved bucket width, in minutes.</td></tr>
+          <tr><td>data.seriesKey</td><td>string</td><td>Series identity, assembled from the requested environment, service, and operation filters.</td></tr>
+          <tr><td>data.dataPoints[]</td><td>array</td><td>Chronological bucket values. See the fields below.</td></tr>
+          <tr><td>data.confirmedFromMs</td><td>integer · optional</td><td>Start-inclusive boundary of the completed, stable portion of the range. Reaches the request start when complete.</td></tr>
+          <tr><td>timeRange, processingRange</td><td>object · optional</td><td>Job progress metadata when present.</td></tr>
+          <tr><td>completedProcessingItems, totalItemsToProcess</td><td>integer</td><td>Legacy aliases for <code>processed</code> and <code>total</code>.</td></tr>
+        </tbody></table></div>
+        <h4>Fields in each <code class="inline">dataPoints[]</code> item</h4>
+        <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead><tbody>
+          <tr><td>bucketMs</td><td>integer</td><td>Bucket start time as Unix epoch milliseconds.</td></tr>
+          <tr><td>spanCount</td><td>integer</td><td>Number of spans in the bucket.</td></tr>
+          <tr><td>errorCount</td><td>integer</td><td>Number of error spans in the bucket.</td></tr>
+          <tr><td>errorRatio</td><td>number</td><td><code>errorCount / spanCount</code>; zero when the bucket has no spans.</td></tr>
+          <tr><td>spansPerSecond</td><td>number</td><td>Span count divided by the bucket duration.</td></tr>
+          <tr><td>p50Ms, p90Ms, p95Ms, p99Ms</td><td>number · nullable</td><td>Span duration percentiles in milliseconds. Can be null when no percentile value is available.</td></tr>
+        </tbody></table></div>
         <p>While a query is running, <code class="inline">confirmedFromMs</code> marks the start of the completed portion of the requested range. Buckets from that timestamp through the request end are stable on later polls. When the job is complete, the confirmed boundary reaches the requested start.</p>
-        <h3>Example metrics response</h3>
-        <p>This is a completed poll response. During processing, <code class="inline">isComplete</code> is false and the data can be partial.</p>
-        <div class="code-label">JSON · GET response (trimmed)</div>
+        <h3>RC0 response example</h3>
+        <p>This is an anonymized excerpt from a prior authenticated RC0 <code class="inline">GetSpanMetrics</code> result (2026-10-22). The query used <code class="inline">aws.region IN us-east-1</code> with <code class="inline">MATCH_ALL</code> over 15 minutes. It completed with 16 one-minute buckets, 66,399 spans, 5,939 errors, and a non-null p99 in all 16 buckets.</p>
+        <div class="table-wrap"><table><thead><tr><th>RC0 result</th><th>Value</th></tr></thead><tbody>
+          <tr><td>Completion</td><td>Complete</td></tr>
+          <tr><td>Granularity</td><td>1 minute</td></tr>
+          <tr><td>Returned buckets</td><td>16</td></tr>
+          <tr><td>Total spans</td><td>66,399</td></tr>
+          <tr><td>Error spans</td><td>5,939</td></tr>
+          <tr><td>Buckets with p99</td><td>16 of 16</td></tr>
+        </tbody></table></div>
+        <div class="code-label">JSON · RC0 GetSpanMetrics result excerpt · job ID redacted</div>
         <pre><code>{
-  "data": {
-    "jobId": "metrics-job-7f31",
-    "isComplete": true,
-    "granularityMinutes": 1,
-    "seriesKey": "environment=prod::service=checkout::operation=POST /orders",
-    "dataPoints": [
-      {
-        "bucketMs": 1735689600000,
-        "spanCount": 240,
-        "errorCount": 5,
-        "errorRatio": 0.0208333333,
-        "spansPerSecond": 4.0,
-        "p50Ms": 18.2,
-        "p90Ms": 41.8,
-        "p95Ms": 57.1,
-        "p99Ms": 92.4
-      }
-    ],
-    "confirmedFromMs": 1735689600000
-  },
-  "jobId": "metrics-job-7f31",
-  "processed": 1,
-  "total": 1,
-  "completedProcessingItems": 1,
-  "totalItemsToProcess": 1
+  "jobId": "[redacted]",
+  "isComplete": true,
+  "granularityMinutes": 1,
+  "seriesKey": "all",
+  "dataPoints": [
+    {
+      "bucketMs": 1792704900000,
+      "spanCount": 4243,
+      "errorCount": 366,
+      "errorRatio": 0.08625972189488569,
+      "spansPerSecond": 70.71666666666667,
+      "p50Ms": 21.80661319402402,
+      "p90Ms": 63.07676030864199,
+      "p95Ms": 79.01210737799043,
+      "p99Ms": 118.37845583333322
+    }
+  ]
 }</code></pre>
-        <p class="small muted">The example omits optional range metadata. The legacy progress fields are included because the job payload also exposes them for compatibility.</p>
+        <p class="small muted">The point above is the first bucket from the captured RC0 result; the other 15 points are omitted here. In that capture, the result appeared under GraphQL <code class="inline">data.getSpanMetrics</code>. The direct REST GET wraps the same metrics object under <code class="inline">data</code> in the job envelope shown in the response field table.</p>
         <div class="endpoint"><span class="method delete">DELETE</span><code class="path">/api/v2/apm/span-metrics/{jobId}</code></div>
         <p>Cancel an active metrics job. The endpoint returns HTTP <code class="inline">204</code> when cancellation is accepted. Repeating a cancel for an unknown or already cancelled job is also treated as successful.</p>
       </section>
@@ -167,7 +189,7 @@
   }'</code></pre>
         <p>The successful response wraps data in <code class="inline">result</code>. Use <code class="inline">result.jobId</code> to poll; each result section reports its own completion state, so one section may finish before another.</p>
         <h3>Example analytics response</h3>
-        <p>This completed response contains one <code class="inline">spanGroupBy</code> section. A real query may return several sections or partial sections while processing.</p>
+        <p>This illustrative response contains one <code class="inline">spanGroupBy</code> section. A real query may return several sections or partial sections while processing.</p>
         <div class="code-label">JSON · successful POST or GET response</div>
         <pre><code>{
   "result": {
