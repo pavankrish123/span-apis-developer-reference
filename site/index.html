@@ -250,16 +250,17 @@
         <p>These are the span-specific section types currently registered by the API.</p>
         <div class="table-wrap"><table><thead><tr><th>Section type</th><th>Use</th><th>Key request fields</th></tr></thead><tbody>
           <tr><td>spanCountTimeBucketed</td><td>Count spans across time buckets.</td><td><code>isErrorOnly</code> (optional)</td></tr>
-          <tr><td>spanGroupBy</td><td>Build a ranked hierarchical breakdown over span dimensions.</td><td><code>groupBy</code> (1–3 span dimensions), required <code>orderBy</code>, optional <code>direction</code> (default <code>desc</code>), <code>isErrorOnly</code></td></tr>
+          <tr><td>spanGroupBy</td><td>Count spans by selected span fields, such as service or region.</td><td><code>groupBy</code> (1–3 span dimensions), required <code>orderBy</code>, optional <code>direction</code> (default <code>desc</code>), <code>isErrorOnly</code></td></tr>
           <tr><td>spanTagStat</td><td>Summarize one numeric or categorical span tag/property.</td><td>required <code>tag</code> source, optional <code>isErrorOnly</code></td></tr>
-          <tr><td>spanExamples</td><td>Return matching spans; can be used for historical search, live tail, or group drill-down.</td><td><code>limit</code>, <code>isErrorOnly</code>, <code>isSpanTail</code>, <code>startSnapshotId</code>, <code>groupContext</code></td></tr>
+          <tr><td>spanExamples</td><td>Return sample spans that match the filters: from a time range, newly arriving, or from one group.</td><td><code>limit</code>, <code>isErrorOnly</code>, <code>isSpanTail</code>, <code>startSnapshotId</code>, <code>groupContext</code></td></tr>
         </tbody></table></div>
-        <h3>Group-by dimensions</h3>
-        <p>A group source identifies a dimension with <code class="inline">id</code>, <code class="inline">entity</code>, and <code class="inline">sourceType</code>. Span group-by sources must use <code class="inline">entity: "span"</code>; source types are <code class="inline">tag</code>, <code class="inline">property</code>, or <code class="inline">computed</code>. Use an alias when a dimension needs a stable name in the response or drill-down context.</p>
-        <p>Supported sort values are <code class="inline">spanCount</code>, <code class="inline">errorCount</code>, <code class="inline">durationP50Ms</code>, <code class="inline">durationP95Ms</code>, and <code class="inline">durationP99Ms</code>. Direction is <code class="inline">asc</code> or <code class="inline">desc</code>.</p>
-        <h3>Span examples limits</h3>
-        <div class="grid2"><div class="card"><h4>Historical query</h4><p>Default limit is 100; maximum is 1,000.</p></div><div class="card"><h4>Live tail</h4><p>Default limit is 25; maximum is 50. Grouping is not supported for live-tail queries.</p></div></div>
-        <p>When using <code class="inline">groupContext</code> to drill into a group, its limit is capped at 25 and its group-by path must align with the selected group dimensions.</p>
+        <h3>Group spans by fields</h3>
+        <p>A group-by puts spans with the same field value together. For example, grouping by service shows a count for each service. Choose one to three span fields in <code class="inline">groupBy</code>, then choose what to sort by in <code class="inline">orderBy</code>. Use <code class="inline">direction: "desc"</code> to put the largest values first.</p>
+        <p>Available sort fields are <code class="inline">spanCount</code>, <code class="inline">errorCount</code>, <code class="inline">durationP50Ms</code>, <code class="inline">durationP95Ms</code>, and <code class="inline">durationP99Ms</code>. When drilling into a group for example spans, send its selected values in <code class="inline">groupContext</code>.</p>
+        <h3>Span examples: past data or live tail</h3>
+        <p>A historical request searches matching spans in the time range you specify. It returns 100 spans by default, up to 1,000.</p>
+        <p>A <strong>live tail</strong> fetches spans added since a saved table version. Set <code class="inline">isSpanTail: true</code>. The response returns a <code class="inline">snapshotId</code>; pass that value as <code class="inline">startSnapshotId</code> on the next request to continue from that point. A live-tail request returns 25 spans by default, up to 50.</p>
+        <div class="callout"><strong>One live-tail limitation</strong><p>You can’t combine live tail with a group drill-down. To fetch example spans from a particular group, use a historical request with <code class="inline">groupContext</code>.</p></div>
       </section>
 
       <section id="errors" class="anchor">
