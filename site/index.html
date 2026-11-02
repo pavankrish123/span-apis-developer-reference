@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111a2e">
+  <meta name="description" content="Developer reference for Splunk Observability Cloud span metrics and analytics APIs.">
+  <title>Span APIs | Splunk Observability Cloud</title>
+  <style>
+    :root{--ink:#17233b;--muted:#53627a;--blue:#4f46e5;--blue2:#eef2ff;--line:#e1e7ef;--paper:#fff;--wash:#f7f9fc;--green:#087f5b;--mono:#111827;--code:#101827;--shadow:0 14px 34px rgba(16,24,40,.08)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:86px}body{margin:0;color:var(--ink);background:var(--wash);font:15px/1.65 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}.topbar{height:66px;background:#111a2e;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100vw - 1320px)/2));position:sticky;top:0;z-index:5;border-bottom:1px solid #ffffff1c}.brand{display:flex;gap:12px;align-items:center;font-weight:650;letter-spacing:.01em}.mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(145deg,#f97316,#e11d48 50%,#7c3aed);display:grid;place-items:center;font-size:14px;font-weight:800}.top-links{display:flex;gap:22px;color:#c6cede;font-size:13px}.top-links a{color:inherit}.layout{max-width:1320px;margin:auto;display:grid;grid-template-columns:225px minmax(0,760px) 205px;gap:42px;padding:34px 24px 100px}.side{position:sticky;top:96px;align-self:start;max-height:calc(100vh - 120px);overflow:auto}.side h4,.toc h4{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#7b8798;margin:14px 0 10px}.side a{display:block;padding:6px 10px;border-left:2px solid transparent;font-size:13px;color:#526078}.side a:hover,.side a.active{color:#292b8f;border-color:var(--blue);background:#eff2ff;text-decoration:none}.side .group{margin-top:22px}.content{min-width:0}.breadcrumb{font-size:12px;color:#718096;margin:4px 0 20px}.hero{padding:4px 0 30px;border-bottom:1px solid var(--line)}.eyebrow{display:inline-flex;align-items:center;gap:7px;background:#e9f7f1;color:#087f5b;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.eyebrow i{width:6px;height:6px;background:#10a875;border-radius:100%}h1{font-size:42px;line-height:1.12;letter-spacing:-.04em;margin:15px 0 13px;color:#121d33}.hero p{font-size:17px;line-height:1.6;max-width:700px;color:#56647a;margin:0}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:19px}.chip{font-size:11px;border:1px solid #d9e0ea;border-radius:6px;background:#fff;padding:4px 8px;color:#475569;font-weight:600}.callout{margin:24px 0;background:#eef2ff;border:1px solid #d9defc;border-radius:10px;padding:16px 18px;color:#303b61}.callout strong{color:#232a73}.callout.warning{background:#fff8e8;border-color:#f4dfae;color:#715624}.callout.success{background:#ebf8f1;border-color:#c8ead7;color:#205d43}.callout p{margin:5px 0 0}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 28px}.step{border:1px solid var(--line);background:white;border-radius:10px;padding:14px;box-shadow:0 2px 6px #15223808}.step b{display:block;font-size:13px;margin-bottom:4px}.step span{color:var(--muted);font-size:12px}.step i{display:inline-grid;place-items:center;width:22px;height:22px;background:var(--blue2);color:var(--blue);border-radius:7px;font-style:normal;font-weight:700;margin-bottom:8px}section{padding:32px 0;border-bottom:1px solid var(--line)}h2{font-size:26px;line-height:1.25;letter-spacing:-.025em;margin:0 0 12px}h3{font-size:18px;margin:26px 0 8px;letter-spacing:-.015em}h4{font-size:14px;margin:20px 0 6px}p{margin:8px 0 14px;color:#46556d}ul{padding-left:21px;color:#46556d}li{margin:5px 0}.muted{color:var(--muted)}.endpoint{display:flex;gap:10px;align-items:center;margin:18px 0 10px;flex-wrap:wrap}.method{display:inline-block;background:#e8f7ef;color:#057552;font-size:11px;font-weight:800;letter-spacing:.05em;border-radius:5px;padding:4px 8px}.method.get{background:#eaf1ff;color:#2858ae}.method.delete{background:#fff0ed;color:#c13f30}.path{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:#f0f2f6;color:#1f2b42;padding:6px 9px;border-radius:5px;overflow-wrap:anywhere}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:9px;background:#fff;margin:12px 0 18px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #edf0f4;vertical-align:top}th{background:#f7f8fb;color:#536078;font-size:11px;text-transform:uppercase;letter-spacing:.06em}tr:last-child td{border-bottom:0}td:first-child{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#303b53}pre{position:relative;background:var(--code);color:#e4e9f2;padding:18px;border-radius:10px;overflow:auto;font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;margin:12px 0 18px;box-shadow:var(--shadow)}pre code{font:inherit;white-space:pre}.code-label{font-size:10px;color:#a8b4c8;text-transform:uppercase;letter-spacing:.1em;margin:0 0 8px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{border:1px solid var(--line);border-radius:10px;padding:14px 15px;background:white}.card h4{margin:0 0 6px}.card p{font-size:13px;margin:0}.pill{display:inline-block;font-size:10px;background:#f1f3f8;border-radius:5px;padding:2px 6px;color:#536078;font-weight:700}.toc{position:sticky;top:98px;align-self:start}.toc a{display:block;font-size:12px;color:#607087;padding:4px 0}.toc a:hover{color:var(--blue)}.anchor{scroll-margin-top:88px}.footer{padding:30px 0 0;color:#718096;font-size:12px}.inline{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;background:#eef1f6;padding:2px 5px;border-radius:4px;color:#26334b}.status{font-size:11px;font-weight:700;color:#16805e}.status.proposed{color:#9b6a09}.small{font-size:12px}.divider{height:1px;background:#e6ebf1;margin:18px 0}
+    @media(max-width:1080px){.layout{grid-template-columns:190px minmax(0,760px);gap:28px}.toc{display:none}}
+    @media(max-width:720px){.topbar{padding:0 18px}.top-links{display:none}.layout{display:block;padding:22px 18px 70px}.side{position:relative;top:0;max-height:none;display:flex;overflow:auto;gap:5px;margin:0 -4px 20px;padding-bottom:6px}.side h4,.side .group{display:none}.side a{white-space:nowrap;border:1px solid var(--line);border-radius:7px;padding:6px 9px;background:#fff}.side a.active{border-color:#b9c0fa}h1{font-size:34px}.steps{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.hero p{font-size:15px}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">S</span><span>Splunk Observability Cloud <span style="color:#9ba8bc;font-weight:400">/ Developer docs</span></span></div>
+    <nav class="top-links"><a href="#overview">API guide</a><a href="#availability">Access</a><a href="#scope">Scope</a></nav>
+  </header>
+  <div class="layout">
+    <nav class="side" aria-label="Documentation navigation">
+      <div class="group"><h4>Span APIs</h4>
+        <a href="#overview" class="active">Overview</a><a href="#start">Start here</a><a href="#lifecycle">Job lifecycle</a>
+      </div>
+      <div class="group"><h4>Reference</h4>
+        <a href="#metrics">Span metrics</a><a href="#analytics">Span analytics</a><a href="#sections">Analytics sections</a><a href="#errors">Errors</a>
+      </div>
+      <div class="group"><h4>Integration</h4>
+        <a href="#semantics">Data semantics</a><a href="#limits">Limits</a><a href="#scope">Scope and status</a>
+      </div>
+    </nav>
+
+    <main class="content">
+      <div class="breadcrumb">Developer documentation <span> / </span> Span APIs</div>
+      <header class="hero" id="overview">
+        <span class="eyebrow"><i></i> API reference · Span Analysis</span>
+        <h1>Span APIs</h1>
+        <p>Use the Span Metrics API for time-series aggregates and the Span Analytics API for filtered span counts, grouped breakdowns, tag summaries, and example spans. Both APIs run asynchronous jobs that you submit and poll.</p>
+        <div class="chips"><span class="chip">JSON over HTTPS</span><span class="chip">POST · GET · DELETE</span><span class="chip">Organization scoped</span></div>
+      </header>
+
+      <div class="callout"><strong>For platform integrations</strong><p>Send requests through the approved Splunk Observability API gateway for your environment. The API derives the organization context from the authenticated request; do not pass an organization ID in the request body. The cURL examples use <span class="inline">$APM_API_BASE</span> and <span class="inline">$AUTH_HEADER</span> as environment-specific placeholders; set <code class="inline">AUTH_HEADER</code> to one complete header line accepted by your gateway.</p></div>
+
+      <section id="start" class="anchor">
+        <h2>Start here</h2>
+        <p>Before making a request, confirm that the target organization has Span Analysis enabled and that your integration uses the supported gateway and credentials for that environment.</p>
+        <div class="steps">
+          <div class="step"><i>1</i><b>Choose an API</b><span>Metrics for a single time series; Analytics for section-based queries and span examples.</span></div>
+          <div class="step"><i>2</i><b>Submit a job</b><span>POST a JSON body. Keep the returned <code class="inline">jobId</code>.</span></div>
+          <div class="step"><i>3</i><b>Poll or cancel</b><span>GET the job until complete. DELETE it to cancel work you no longer need.</span></div>
+        </div>
+        <div class="callout warning" id="availability"><strong>Access is feature gated</strong><p>Both resources check the per-organization <code class="inline">spanAnalysisEnabled</code> setting. The code documents this setting as disabled by default. A disabled organization receives HTTP <code class="inline">403</code>.</p></div>
+        <h3>Request context</h3>
+        <p>At the API service, the authenticated request must include the user and organization identity supplied by the trusted gateway. The service reads <code class="inline">X-SF-UserId</code> and <code class="inline">X-SF-OrgId</code>; integrations should not set these identity headers themselves. Confirm the gateway's client authentication method and route with the API owner for the target environment.</p>
+      </section>
+
+      <section id="lifecycle" class="anchor">
+        <h2>Job lifecycle</h2>
+        <p>These endpoints return data as a job progresses. A poll can contain partial results. Keep polling with the same job ID until the response reports completion, or cancel the job when the result is no longer needed.</p>
+        <div class="table-wrap"><table><thead><tr><th>Action</th><th>Metrics</th><th>Analytics</th></tr></thead><tbody>
+          <tr><td>Submit</td><td><span class="pill">POST</span> <code>/api/v2/apm/span-metrics</code></td><td><span class="pill">POST</span> <code>/api/analytics/span</code></td></tr>
+          <tr><td>Poll</td><td><span class="pill">GET</span> <code>/api/v2/apm/span-metrics/{jobId}</code></td><td><span class="pill">GET</span> <code>/api/analytics/span/{jobId}</code></td></tr>
+          <tr><td>Cancel</td><td><span class="pill">DELETE</span> <code>/api/v2/apm/span-metrics/{jobId}</code></td><td><span class="pill">DELETE</span> <code>/api/analytics/span/{jobId}</code></td></tr>
+        </tbody></table></div>
+        <div class="grid2"><div class="card"><h4>Metrics response</h4><p>A job payload wraps the result in <code class="inline">data</code> and includes <code class="inline">jobId</code>, <code class="inline">processed</code>, and <code class="inline">total</code>.</p></div><div class="card"><h4>Analytics response</h4><p>A success envelope contains <code class="inline">result</code>, with <code class="inline">jobId</code> and a list of independently progressing <code class="inline">sections</code>.</p></div></div>
+      </section>
+
+      <section id="metrics" class="anchor">
+        <h2>Span Metrics API</h2>
+        <p>Returns one aggregated span time series for the requested time range and filters. The server chooses a bucket granularity and returns that choice in the response.</p>
+        <div class="endpoint"><span class="method">POST</span><code class="path">/api/v2/apm/span-metrics</code></div>
+        <h3>Submit a metrics query</h3>
+        <div class="code-label">cURL · submit</div>
+        <pre><code>curl --request POST "$APM_API_BASE/api/v2/apm/span-metrics" \
+  --header "Content-Type: application/json" \
+  --header "$AUTH_HEADER" \
+  --data '{
+    "timeRangeMillis": {"gte": 1735689600000, "lt": 1735693200000},
+    "environment": "prod",
+    "serviceName": "checkout",
+    "operationName": "POST /orders",
+    "isErrorOnly": false,
+    "bucketsPerQuery": 3
+  }'</code></pre>
+        <p class="small muted">Time bounds use epoch milliseconds. The start bound is inclusive and the end bound is exclusive. Replace the sample timestamps and filters with values from your request.</p>
+        <h3>Request fields</h3>
+        <div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead><tbody>
+          <tr><td>timeRangeMillis</td><td>range object</td><td>Required. Must have both lower and upper bounds, and start must precede end.</td></tr>
+          <tr><td>environment</td><td>string</td><td>Optional environment filter. Omit to include all environments.</td></tr>
+          <tr><td>serviceName</td><td>string</td><td>Optional service filter. Omit to include all services.</td></tr>
+          <tr><td>operationName</td><td>string</td><td>Optional operation filter. Omit to include all operations.</td></tr>
+          <tr><td>tags</td><td>array</td><td>Optional tag predicates. A predicate has <code>tag</code> or <code>scopedTagName</code>, <code>operation</code>, and <code>values</code>.</td></tr>
+          <tr><td>tagsFilterType</td><td>enum</td><td><code>MATCH_ALL</code> or <code>MATCH_ANY</code>; defaults to <code>MATCH_ALL</code>.</td></tr>
+          <tr><td>durationMicros</td><td>range object</td><td>Optional duration filter. Values are microseconds; provide at least one bound.</td></tr>
+          <tr><td>isErrorOnly</td><td>boolean</td><td>When true, include only spans with OpenTelemetry error status. Defaults to false.</td></tr>
+          <tr><td>bucketsPerQuery</td><td>positive integer</td><td>Optional query window size in chart buckets; defaults to 3.</td></tr>
+        </tbody></table></div>
+        <h3>Poll for results</h3>
+        <div class="code-label">cURL · poll</div>
+        <pre><code>curl --request GET "$APM_API_BASE/api/v2/apm/span-metrics/$JOB_ID" \
+  --header "$AUTH_HEADER"</code></pre>
+        <p>Read the result from <code class="inline">data</code>. Its fields include <code class="inline">isComplete</code>, <code class="inline">granularityMinutes</code>, <code class="inline">seriesKey</code>, and <code class="inline">dataPoints</code>. Each point contains <code class="inline">bucketMs</code>, <code class="inline">spanCount</code>, <code class="inline">errorCount</code>, <code class="inline">errorRatio</code>, <code class="inline">spansPerSecond</code>, and nullable <code class="inline">p50Ms</code>, <code class="inline">p90Ms</code>, <code class="inline">p95Ms</code>, and <code class="inline">p99Ms</code>.</p>
+        <p>While a query is running, <code class="inline">confirmedFromMs</code> marks the start of the completed portion of the requested range. Buckets from that timestamp through the request end are stable on later polls. When the job is complete, the confirmed boundary reaches the requested start.</p>
+        <div class="endpoint"><span class="method delete">DELETE</span><code class="path">/api/v2/apm/span-metrics/{jobId}</code></div>
+        <p>Cancel an active metrics job. The endpoint returns HTTP <code class="inline">204</code> when cancellation is accepted. Repeating a cancel for an unknown or already cancelled job is also treated as successful.</p>
+      </section>
+
+      <section id="analytics" class="anchor">
+        <h2>Span Analytics API</h2>
+        <p>Runs one analytics job with one or more requested sections. A section is a requested result shape, such as a time bucket series or grouped breakdown. Common filters and the time range are shared across the sections in that job.</p>
+        <div class="endpoint"><span class="method">POST</span><code class="path">/api/analytics/span</code></div>
+        <h3>Submit analytics sections</h3>
+        <div class="code-label">cURL · submit a count and group breakdown</div>
+        <pre><code>curl --request POST "$APM_API_BASE/api/analytics/span" \
+  --header "Content-Type: application/json" \
+  --header "$AUTH_HEADER" \
+  --data '{
+    "sharedParameters": {
+      "timeRangeMillis": {"gte": 1735689600000, "lt": 1735693200000},
+      "samplingFactor": 100,
+      "filters": []
+    },
+    "sectionsParameters": [
+      {"sectionType": "spanCountTimeBucketed", "isErrorOnly": false},
+      {
+        "sectionType": "spanGroupBy",
+        "groupBy": [{
+          "alias": "service",
+          "source": {"id": "service_name", "entity": "span", "sourceType": "property"}
+        }],
+        "orderBy": "spanCount",
+        "direction": "desc"
+      }
+    ]
+  }'</code></pre>
+        <p>The successful response wraps data in <code class="inline">result</code>. Use <code class="inline">result.jobId</code> to poll; each result section reports its own completion state, so one section may finish before another.</p>
+        <div class="endpoint"><span class="method get">GET</span><code class="path">/api/analytics/span/{jobId}</code><span class="method delete">DELETE</span><code class="path">/api/analytics/span/{jobId}</code></div>
+        <p>GET returns the current analytics envelope. DELETE aborts the analytics job. Analytics failures are represented in an analytics error envelope; check the response body as well as the HTTP status.</p>
+        <h3>Shared request fields</h3>
+        <div class="table-wrap"><table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody>
+          <tr><td>sharedParameters.timeRangeMillis</td><td>Query range in epoch milliseconds. Use explicit bounds for predictable requests.</td></tr>
+          <tr><td>sharedParameters.samplingFactor</td><td>Optional sample control. If omitted, the server uses its configured no-sampling default.</td></tr>
+          <tr><td>sharedParameters.filters</td><td>Shared filters. Span and trace filters use <code>filterType</code> values <code>spanFilter</code> and <code>traceFilter</code>.</td></tr>
+          <tr><td>sectionsParameters</td><td>One or more section objects, each selected by <code>sectionType</code>.</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section id="sections" class="anchor">
+        <h2>Analytics sections</h2>
+        <p>These are the span-specific section types currently registered by the API.</p>
+        <div class="table-wrap"><table><thead><tr><th>Section type</th><th>Use</th><th>Key request fields</th></tr></thead><tbody>
+          <tr><td>spanCountTimeBucketed</td><td>Count spans across time buckets.</td><td><code>isErrorOnly</code> (optional)</td></tr>
+          <tr><td>spanGroupBy</td><td>Build a ranked hierarchical breakdown over span dimensions.</td><td><code>groupBy</code> (1–3 span dimensions), required <code>orderBy</code>, optional <code>direction</code> (default <code>desc</code>), <code>isErrorOnly</code></td></tr>
+          <tr><td>spanTagStat</td><td>Summarize one numeric or categorical span tag/property.</td><td>required <code>tag</code> source, optional <code>isErrorOnly</code></td></tr>
+          <tr><td>spanExamples</td><td>Return matching spans; can be used for historical search, live tail, or group drill-down.</td><td><code>limit</code>, <code>isErrorOnly</code>, <code>isSpanTail</code>, <code>startSnapshotId</code>, <code>groupContext</code></td></tr>
+        </tbody></table></div>
+        <h3>Group-by dimensions</h3>
+        <p>A group source identifies a dimension with <code class="inline">id</code>, <code class="inline">entity</code>, and <code class="inline">sourceType</code>. Span group-by sources must use <code class="inline">entity: "span"</code>; source types are <code class="inline">tag</code>, <code class="inline">property</code>, or <code class="inline">computed</code>. Use an alias when a dimension needs a stable name in the response or drill-down context.</p>
+        <p>Supported sort values are <code class="inline">spanCount</code>, <code class="inline">errorCount</code>, <code class="inline">durationP50Ms</code>, <code class="inline">durationP95Ms</code>, and <code class="inline">durationP99Ms</code>. Direction is <code class="inline">asc</code> or <code class="inline">desc</code>.</p>
+        <h3>Span examples limits</h3>
+        <div class="grid2"><div class="card"><h4>Historical query</h4><p>Default limit is 100; maximum is 1,000.</p></div><div class="card"><h4>Live tail</h4><p>Default limit is 25; maximum is 50. Grouping is not supported for live-tail queries.</p></div></div>
+        <p>When using <code class="inline">groupContext</code> to drill into a group, its limit is capped at 25 and its group-by path must align with the selected group dimensions.</p>
+      </section>
+
+      <section id="errors" class="anchor">
+        <h2>Errors and status codes</h2>
+        <p>Metrics uses HTTP errors for request validation and job access. Analytics returns a typed error envelope for many query failures, so clients should parse its body instead of relying only on the HTTP status.</p>
+        <div class="table-wrap"><table><thead><tr><th>HTTP status</th><th>Typical meaning</th><th>Client action</th></tr></thead><tbody>
+          <tr><td>202</td><td>Metrics job accepted.</td><td>Read the job ID and start polling.</td></tr>
+          <tr><td>400</td><td>Invalid request, such as a missing metrics range bound.</td><td>Correct the request before retrying.</td></tr>
+          <tr><td>401</td><td>Required authenticated organization context is missing.</td><td>Check gateway authentication and identity propagation.</td></tr>
+          <tr><td>403</td><td>Span Analysis is disabled for the organization.</td><td>Ask the service owner to enable the per-org feature.</td></tr>
+          <tr><td>404</td><td>Job ID is unknown or inaccessible.</td><td>Verify the job ID and use the same org/user context.</td></tr>
+          <tr><td>410</td><td>Metrics job expired or was cancelled.</td><td>Submit a new job if results are still needed.</td></tr>
+          <tr><td>503</td><td>Service or query failure surfaced as unavailable.</td><td>Retry according to your integration's backoff policy.</td></tr>
+        </tbody></table></div>
+        <p class="small muted">The metrics API maps client-visible job failures to their 4xx status; analytics error responses can use a successful HTTP exchange with an error envelope. Do not assume every failed analytics request is indicated by a non-2xx code.</p>
+      </section>
+
+      <section id="semantics" class="anchor">
+        <h2>Data semantics</h2>
+        <ul>
+          <li>Metrics timestamps and <code class="inline">timeRangeMillis</code> are epoch milliseconds. Duration filters use microseconds; returned percentile values use milliseconds.</li>
+          <li><code class="inline">isErrorOnly</code> means spans with OpenTelemetry error status.</li>
+          <li>Metrics returns one series per request. Grouping across multiple values is provided by the Analytics <code class="inline">spanGroupBy</code> section.</li>
+          <li>Analytics sections can complete independently. Preserve section-level completion and processing-range metadata when presenting partial data.</li>
+          <li>Job IDs are scoped to the authenticated caller context. Poll and cancel using the same org/user identity as the submit request.</li>
+        </ul>
+      </section>
+
+      <section id="limits" class="anchor">
+        <h2>Limits and client guidance</h2>
+        <ul>
+          <li>Always poll with a bounded interval and backoff; avoid tight loops.</li>
+          <li>Send only the sections needed for the current result. A single analytics job can contain multiple sections, which share its range and filters.</li>
+          <li>Set explicit time bounds, keep cancellation available, and treat partial results as partial until their completion fields say otherwise.</li>
+          <li>Validate all group-by sources against the API's span entity requirement and keep the group-by list to at most three dimensions.</li>
+        </ul>
+      </section>
+
+      <section id="scope" class="anchor">
+        <h2>Scope and implementation status</h2>
+        <p>This page covers the implemented Span Metrics and Span Analytics resources: <code class="inline">/api/v2/apm/span-metrics</code> and <code class="inline">/api/analytics/span</code>, including their polling and cancellation routes.</p>
+        <div class="callout warning"><strong>Group trends endpoint</strong><p>A separate group-trends API design exists in the repository as a proposal. It is not listed here as an available endpoint because the current API resource does not implement it.</p></div>
+        <p class="small muted">Reference is based on the current API resources and request/response models. Confirm environment-specific routing, client authentication, and feature enablement with the API owner before connecting another platform.</p>
+      </section>
+      <footer class="footer">Splunk Observability Cloud · Span API reference · Prepared for cross-platform integration</footer>
+    </main>
+    <aside class="toc"><h4>On this page</h4><a href="#start">Start here</a><a href="#lifecycle">Job lifecycle</a><a href="#metrics">Span Metrics</a><a href="#analytics">Span Analytics</a><a href="#sections">Analytics sections</a><a href="#errors">Errors and status</a><a href="#semantics">Data semantics</a><a href="#limits">Client guidance</a></aside>
+  </div>
+</body>
+</html>
